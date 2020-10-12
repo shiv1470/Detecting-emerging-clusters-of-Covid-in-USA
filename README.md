@@ -49,6 +49,6 @@ Chirag Garg - [@DeVil2O](https://github.com/DeVil2O)
 
 Shivam Gupta - [@shiv1470](https://github.com/shiv1470)
 
-Project Link: [https://github.com/shiv1470/Detecting-emerging-clusters-of-Covid-in-India](https://github.com/shiv1470/Detecting-emerging-clusters-of-Covid-in-India)
+Project Link: [https://github.com/shiv1470/Detecting-emerging-clusters-of-Covid-in-USA](https://github.com/shiv1470/Detecting-emerging-clusters-of-Covid-in-India)
 
 
