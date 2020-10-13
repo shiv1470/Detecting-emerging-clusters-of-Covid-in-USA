@@ -21,6 +21,8 @@
 * [Contact](#contact)
 
 ## About The Project
+Our solution makes use of a metaheuristic algorithm that is Particle Swarm Optimization to detect the hotspot and Monte Carlo Simulation to test the significance of the hotspot. Our approach is to optimize the time complexity of the SatScan algorithm which is used to detect circular hotspots. Our solution detects the zone or regions where COVID19 cases are present and emerging so that it helps the government or other body to take measures to control the transmission of the diseases and provide treatment to the people in the region.
+
 
 ### Built With
 
