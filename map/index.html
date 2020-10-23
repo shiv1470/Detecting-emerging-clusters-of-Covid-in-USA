@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DC MAP Trial</title>
+  </head>
+  <style>
+    #map {
+      width: 100vw;
+      height: 100vh;
+    }
+  </style>
+
+  <body>
+    <div id="map"></div>
+    <script
+      async
+      defer
+      src="https://maps.googleapis.com/maps/api/js?key=YOUR API KEY&callback=init"
+      type="text/javascript"
+    ></script>
+    <script>
+      var map;
+      function init() {
+        map = new google.maps.Map(document.getElementById("map"), {
+          zoom: 6,
+          center: { lat: 36, lng: -95 },
+          mapTypeId: "terrain",
+        });
+        const citymap = [
+          {
+            center: { lat: 35.5424444709, lng: -97.9824010419 },
+            radius: 2.386139924893198,
+          },
+          {
+            center: { lat: 37.9991525438, lng: -101.791256465 },
+            radius: 6.02527381279162,
+          },
+          {
+            center: { lat: 36.7152338187, lng: -95.9043661801 },
+            radius: 7.5141683809571225,
+          },
+        ];
+
+        citymap.map((hotspot) => {
+          var polygon = new google.maps.Circle({
+            center: hotspot.center,
+            radius: hotspot.radius * 100000,
+            strokeColor: "#FF0000",
+            strokeOpacity: 0.8,
+            strokeWeight: 3,
+            fillColor: "#FF0000",
+            fillOpacity: 0.35,
+          });
+          polygon.setMap(map);
+        });
+      }
+    </script>
+  </body>
+</html>
