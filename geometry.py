@@ -29,5 +29,17 @@ class circle:
 			if (self.centre.euclideanDistance(p.centre) + p.radius) <= self.radius:
 				return True
 			return False
+	def areaPercentOverlap(self,c):
+		if isinstance(c,circle):
+			d=self.centre.euclideanDistance(c.centre)
+			r=self.radius
+			R=c.radius
+			R,r=max(R,r),min(R,r)
+			if d<(r+R):
+				if R<(r+d):
+					A = 0.5 * ((r+R-d)*(r+R+d)*(d+r-R)*(d+R-r))**0.5
+					return (A/self.area())*100
+				return 100.0
+			return 0	
 	def area(self):
 		return math.pi * self.radius * self.radius

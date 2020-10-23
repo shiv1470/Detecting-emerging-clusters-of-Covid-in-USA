@@ -6,8 +6,8 @@ import time
 start_time = time.time()
 points={}
 totalCases=0
-UsArea=1500	# to be verified from sources; I just took a rough estimate (50,-125) to(25,-65)
-with open('testdata.csv', mode ='r')as file: 
+UsArea=154	# I just took a rough sample of (45,-114) to(36,-100)
+with open('location_data.csv', mode ='r')as file: 
     
   csvFile = csv.reader(file,delimiter=";") 
   lineNumber = 0
@@ -18,14 +18,33 @@ with open('testdata.csv', mode ='r')as file:
   		coordinate=line[0].split(",")
   		coordinate[0]=float(coordinate[0])
   		coordinate[1]=float(coordinate[1])
-  		if not (50>=coordinate[0]>=25 and -125<=coordinate[1]<=-65):
+  		if not (45>=coordinate[0]>=36 and -114<=coordinate[1]<=-100):
   			continue
-  		caseCount=int(line[3])
+  		caseCount=0 #int(line[3])
   		points[int(line[1])]=[coordinate,caseCount]
-  		totalCases+=caseCount
+
+with open("us-counties.csv", mode = "r") as file:
+ 	csvFile = csv.reader(file,delimiter=",")
+ 	lineNumber = 0
+ 	for line in csvFile:
+ 		lineNumber+=1
+ 		try:
+		 	if line[0]=="2020-09-04":
+ 				if int(line[3]) in points:
+ 					points[int(line[3])][1] -= int(line[4])
+ 			if line[0]=="2020-09-05":
+ 				if int(line[3]) in points:
+ 					points[int(line[3])][1] += int(line[4])
+ 					if points[int(line[3])][1] <0:
+ 						points[int(line[3])][1]=0
+ 					totalCases+=points[int(line[3])][1]
+ 		except:
+ 			continue
 
 print("Reading Data completed.")
 print("Time taken",time.time()-start_time,"seconds.")
+print("Total cases:",totalCases)
+print("Total counties considered:",len(points))
 
 def setscan(pointList):
 	circles = []
@@ -59,14 +78,14 @@ print("completed generating Circles")
 print("Time taken",time.time()-start_time,"seconds.")
 
 print("Starting Monte Carlo Simulations")
-m=45
+m=35
 
 maxLrzList=[]
 for Simulations in range(m):
 	pointlist={}
 	for i in range(totalCases):
-		x = random.uniform(25,50)
-		y = random.uniform(-125,-65)
+		x = random.uniform(36.1,45.1)
+		y = random.uniform(-114.1,-100.1)
 		generated_point=geometry.point(x,y)
 		dist = 100
 		closestPoint=None
@@ -96,7 +115,9 @@ print("completed all Simulations")
 maxLrzList.sort(reverse=True)
 print("Max Likely hood ratio list:",maxLrzList)
 
-alphap=0.05
+alphap=0.03
+
+centercircles = {}
 for c in realCircles:
 	place=1
 	for x in maxLrzList:
@@ -105,6 +126,24 @@ for c in realCircles:
 		place+=1
 	pval = place/m
 	if pval <= alphap:
-		print("Hotspot detected. ",c," has significance value of ", pval) 
+		if (c.centre.x,c.centre,y) not in centercircles or c.logLRz>(centercircles[(c.centre.x, c.centre.y)].logLRz):
+			centercircles[(c.centre.x, c.centre.y)] = c
+
+hotspots=list(centercircles.values())
+hotspots.sort(reverse=True, key = lambda itm: itm.logLRz)
+
+alreadyshown=[]
+
+OutputFile = open("hotspots_satscan.txt","w")
+
+for c1 in hotspots:
+	for c2 in alreadyshown:
+		if  c1.areaPercentOverlap(c2)>=50 or c2.areaPercentOverlap(c1)>=50:
+			break
+	else:
+		OutputFile.write(str(c1)+"\n")
+		print(c1)
+		alreadyshown.append(c1)
+
 print("Process completed")
 print("Time taken",time.time()-start_time,"seconds.")

@@ -9,10 +9,10 @@ with open('us-counties.csv', newline='') as File:
     reader = csv.reader(File)
     for row in reader:
         if row[2] in state.keys():
-            if row[1] in state[row[2]].keys():
-                state[row[2]][row[1]][row[0]] = [int(row[4]), int(row[5])]
+            if row[3] in state[row[2]].keys():
+                state[row[2]][row[3]][row[0]] = [int(row[4]), int(row[5])]
             else:
-                state[row[2]][row[1]] = {'0000-00-00': 0}
+                state[row[2]][row[3]] = {'0000-00-00': 0}
         else:
             state[row[2]] = {}
         
