@@ -17,44 +17,47 @@
     <script
       async
       defer
-      src="https://maps.googleapis.com/maps/api/js?key=YOUR API KEY&callback=init"
+      src="https://maps.googleapis.com/maps/api/js?key=API KEY&callback=init"
       type="text/javascript"
     ></script>
     <script>
       var map;
+
       function init() {
         map = new google.maps.Map(document.getElementById("map"), {
           zoom: 6,
-          center: { lat: 36, lng: -95 },
+          center: { lat: 41.5, lng: -110 },
           mapTypeId: "terrain",
         });
-        const citymap = [
-          {
-            center: { lat: 35.5424444709, lng: -97.9824010419 },
-            radius: 2.386139924893198,
-          },
-          {
-            center: { lat: 37.9991525438, lng: -101.791256465 },
-            radius: 6.02527381279162,
-          },
-          {
-            center: { lat: 36.7152338187, lng: -95.9043661801 },
-            radius: 7.5141683809571225,
-          },
-        ];
+        fetch("./hotspots_satscan.json")
+          .then((response) => {
+            return response.json();
+          })
+          .then((data) => {
+            const transformedData = [];
+            data.map((hotspot) => {
+              const newData = {};
+              newData["center"] = {
+                lat: parseFloat(hotspot.centre[0]),
+                lng: parseFloat(hotspot.centre[1]),
+              };
+              newData["radius"] = parseFloat(hotspot.radius);
+              transformedData.push(newData);
+            });
 
-        citymap.map((hotspot) => {
-          var polygon = new google.maps.Circle({
-            center: hotspot.center,
-            radius: hotspot.radius * 100000,
-            strokeColor: "#FF0000",
-            strokeOpacity: 0.8,
-            strokeWeight: 3,
-            fillColor: "#FF0000",
-            fillOpacity: 0.35,
+            transformedData.map((hotspot) => {
+              var polygon = new google.maps.Circle({
+                center: hotspot.center,
+                radius: parseInt(hotspot.radius) * 100000,
+                strokeColor: "#FF0000",
+                strokeOpacity: 0.8,
+                strokeWeight: 3,
+                fillColor: "#FF0000",
+                fillOpacity: 0.35,
+              });
+              polygon.setMap(map);
+            });
           });
-          polygon.setMap(map);
-        });
       }
     </script>
   </body>
