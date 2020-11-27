@@ -57,7 +57,7 @@ class ParticleSwarmOptimizedClustering:
                     i + 1, self.max_iter, self.gbest_score))
                 print("centroids:",self.gbest_centroids)
         print('Finish with gbest score {:.18f}'.format(self.gbest_score))
-        return history
+        return self.gbest_centroids
 
 
 if __name__ == "__main__":
