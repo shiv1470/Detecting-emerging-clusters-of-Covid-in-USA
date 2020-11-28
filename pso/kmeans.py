@@ -12,6 +12,13 @@ def calc_sse(centroids: numpy.ndarray, labels: numpy.ndarray, data: numpy.ndarra
         distances += dist
     return distances
 
+def calc_sse2(centroids: numpy.ndarray, labels: numpy.ndarray, data: numpy.ndarray, weights: list):
+    distance = 0
+    for i, c in enumerate(centroids):
+        idx = numpy.where(labels == i)
+        dist = numpy.sum((data[idx] - c)**2)
+        distances += dist*weights[idx]
+    return distances
 
 class KMeans:
     """K-Means clustering algorithm

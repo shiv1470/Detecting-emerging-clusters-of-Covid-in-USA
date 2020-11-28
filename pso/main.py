@@ -3,19 +3,29 @@ import pandas as pd
 import json
 from pso import ParticleSwarmOptimizedClustering
 from utils import normalize
+
+"""
+flags - 
+1. Normal PSO, No Radius approach, No Weight Consideration
+2. Normal PSO, No Radius approach, Weight Consideration
+
+"""
 num_centroids=4
 if __name__ == "__main__":
     data = open("seed3.txt","r")
     x = []
+    cases = []
     while(True):
         line = data.readline()
         if line == "":
             break
-        x.append(list(map(float,line.split())))
+        line = list(map(float,line.split()))
+        x.append([line[0],line[1]])
+        cases.append(line[2])
     x = np.array(x)
-    print(x)
+    #print(x)
     pso = ParticleSwarmOptimizedClustering(
-        n_cluster=num_centroids, n_particles=16, data=x, hybrid=False)  #, max_iter=2000, print_debug=50)
+        n_cluster=num_centroids, n_particles=16, data=x, hybrid=False, flag = 1)  #, max_iter=2000, print_debug=50)
     centroids=pso.run()
     radius = [0]*num_centroids
     for i in x:
@@ -28,7 +38,9 @@ if __name__ == "__main__":
                 index  = j
         radius[index]=max(radius[index], min_dist)
     data = {}
+    x = []
     for i in range(4):
-        data[i] = {"centre" : list(centroids[i]), "radius" : radius[i]}
+        x.append({"centre" : list(centroids[i]), "radius" : radius[i]})
+    data["hotspots"] = x
     with open('hotspots_pso.json', 'w') as outfile:
         json.dump(data, outfile,indent = 2)

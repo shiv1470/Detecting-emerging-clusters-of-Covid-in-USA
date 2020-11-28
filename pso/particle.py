@@ -28,7 +28,9 @@ class Particle:
                  use_kmeans: bool = False,
                  w: float = 0.9,
                  c1: float = 0.5,
-                 c2: float = 0.3):
+                 c2: float = 0.3,
+                 flag: int = 1,
+                 weights: list = None):
         index = np.random.choice(list(range(len(data))), n_cluster)
         self.centroids = data[index].copy()
         if use_kmeans:
@@ -37,7 +39,11 @@ class Particle:
             self.centroids = kmeans.centroid.copy()
         self.best_position = self.centroids.copy()
         self.best_score = quantization_error(self.centroids, self._predict(data), data)
-        self.best_sse = calc_sse(self.centroids, self._predict(data), data)
+        self.flag=flag
+        if self.flag%2==1:
+            self.best_sse = calc_sse(self.centroids, self._predict(data), data)
+        else:
+            self.best_sse = calc_sse2(self.centroids, self._predict(data), data, weights)
         self.velocity = np.zeros_like(self.centroids)
         self._w = w
         self._c1 = c1
@@ -67,7 +73,10 @@ class Particle:
     def _update_centroids(self, data: np.ndarray):
         self.centroids = self.centroids + self.velocity
         new_score = quantization_error(self.centroids, self._predict(data), data)
-        sse = calc_sse(self.centroids, self._predict(data), data)
+        if self.flag%2==1:
+            sse = calc_sse(self.centroids, self._predict(data), data)
+        else:
+            sse = calc_sse2(self.centroids, self._predict(data), data, weights)
         self.best_sse = min(sse, self.best_sse)
         if new_score < self.best_score:
             self.best_score = new_score
