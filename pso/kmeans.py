@@ -17,7 +17,7 @@ def calc_sse2(centroids: numpy.ndarray, labels: numpy.ndarray, data: numpy.ndarr
     for i, c in enumerate(centroids):
         idx = numpy.where(labels == i)
         dist = numpy.sum((data[idx] - c)**2)
-        distances += dist*weights[idx]
+        distances += dist*(weights[idx])
     return distances
 
 class KMeans:
