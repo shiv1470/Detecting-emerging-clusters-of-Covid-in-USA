@@ -138,7 +138,7 @@ OutputFile = open("hotspots_satscan.txt","w")
 
 for c1 in hotspots:
 	for c2 in alreadyshown:
-		if  c1.areaPercentOverlap(c2)>=50 or c2.areaPercentOverlap(c1)>=50:
+		if  c1.areaPercentOverlap(c2)>=10 or c2.areaPercentOverlap(c1)>=10:
 			break
 	else:
 		OutputFile.write(str(c1)+"\n")
