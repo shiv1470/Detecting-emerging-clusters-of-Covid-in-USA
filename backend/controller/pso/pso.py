@@ -16,7 +16,9 @@ class ParticleSwarmOptimizedClustering:
                  data: np.ndarray,
                  hybrid: bool = True,
                  max_iter: int = 100,
-                 print_debug: int = 10):
+                 print_debug: int = 10,
+                 flag: int = 1,
+                 weights: list = None):
         self.n_cluster = n_cluster
         self.n_particles = n_particles
         self.data = data
@@ -28,13 +30,15 @@ class ParticleSwarmOptimizedClustering:
         self.gbest_score = np.inf
         self.gbest_centroids = None
         self.gbest_sse = np.inf
+        self.flag = flag
+        self.weights = weights
         self._init_particles()
 
     def _init_particles(self):
         for i in range(self.n_particles):
             particle = None
             if i == 0 and self.hybrid:
-                particle = Particle(self.n_cluster, self.data, use_kmeans=True)
+                particle = Particle(self.n_cluster, self.data, use_kmeans=True, flag=self.flag, weights = self.weights)
             else:
                 particle = Particle(self.n_cluster, self.data, use_kmeans=False)
             if particle.best_score < self.gbest_score:
@@ -55,11 +59,11 @@ class ParticleSwarmOptimizedClustering:
                     self.gbest_centroids = particle.centroids.copy()
                     self.gbest_score = particle.best_score
             history.append(self.gbest_score)
-            if i % self.print_debug == 0:
-                print('Iteration {:04d}/{:04d} current gbest score {:.18f}'.format(
-                    i + 1, self.max_iter, self.gbest_score))
-                print("centroids:",self.gbest_centroids)
-        print('Finish with gbest score {:.18f}'.format(self.gbest_score))
+        #    if i % self.print_debug == 0:
+                #print('Iteration {:04d}/{:04d} current gbest score {:.18f}'.format(
+                #    i + 1, self.max_iter, self.gbest_score))
+        print("centroids:",self.gbest_centroids)
+        #print('Finish with gbest score {:.18f}'.format(self.gbest_score))
         return self.gbest_centroids
 
 

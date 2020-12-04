@@ -28,29 +28,28 @@ with open('location_data.csv', mode ='r')as file:
     coordinate[1]=float(coordinate[1])
     if not (topleftx<=coordinate[0]<=bottomrightx and toplefty<=coordinate[1]<=bottomrighty):
       continue
-    print(coordinate)
-    tempfile.write(str(coordinate[0])+" "+str(coordinate[1])+"\n")
     caseCount=0 #int(line[3])
     points[int(line[1])]=[coordinate,caseCount]
 
-with open("us-counties.csv", mode = "r") as file:
- 	csvFile = csv.reader(file,delimiter=",")
- 	lineNumber = 0
- 	for line in csvFile:
- 		lineNumber+=1
- 		try:
-		 	if line[0]=="2020-09-04":
- 				if int(line[3]) in points:
- 					points[int(line[3])][1] -= int(line[4])
- 			if line[0]=="2020-09-05":
- 				if int(line[3]) in points:
- 					points[int(line[3])][1] += int(line[4])
- 					if points[int(line[3])][1] <0:
- 						points[int(line[3])][1]=0
- 					totalCases+=points[int(line[3])][1]
- 		except:
- 			continue
-
+  with open("us-counties.csv", mode = "r") as file:
+   	csvFile = csv.reader(file,delimiter=",")
+   	lineNumber = 0
+   	for line in csvFile:
+   		lineNumber+=1
+   		try:
+  		 	if line[0]=="2020-09-04":
+   				if int(line[3]) in points:
+   					points[int(line[3])][1] -= int(line[4])
+   			if line[0]=="2020-09-05":
+   				if int(line[3]) in points:
+   					points[int(line[3])][1] += int(line[4])
+   					if points[int(line[3])][1] <0:
+   						points[int(line[3])][1]=0
+   					totalCases+=points[int(line[3])][1]
+   		except:
+   			continue
+  for p in points:
+    tempfile.write(str(points[p][0][0])+" "+str(points[p][0][1])+" "+str(points[p][1])+"\n")
 print("Reading Data completed.")
 print("Time taken",time.time()-start_time,"seconds.")
 print("Total cases:",totalCases)
